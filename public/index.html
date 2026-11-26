@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContentGuard | AI Duplicate Detector</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h2 { margin: 0; font-size: 21px; }
+    header span { color: #a5b4fc; font-size: 13px; }
+    main { max-width: 1050px; margin: 40px auto; padding: 0 20px; }
+    .intro { margin-bottom: 25px; }
+    .intro h1 { font-size: 30px; margin-bottom: 8px; }
+    .muted { color: #64748b; line-height: 1.6; }
+    .panel {
+      background: white;
+      padding: 26px;
+      border-radius: 14px;
+      border: 1px solid #e5eaf2;
+      margin-bottom: 22px;
+    }
+    .upload {
+      border: 2px dashed #a5b4fc;
+      border-radius: 12px;
+      text-align: center;
+      padding: 40px 20px;
+      background: #fafaff;
+    }
+    .upload-icon { font-size: 40px; }
+    input[type=file] { margin: 18px 0; max-width: 100%; }
+    button {
+      background: #4f46e5;
+      color: white;
+      border: 0;
+      padding: 13px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .file-list { margin-top: 15px; text-align: left; }
+    .file-item { padding: 9px; border-bottom: 1px solid #eee; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+    .stat {
+      background: #f8faff;
+      border: 1px solid #e5eaf2;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .stat strong { display: block; font-size: 28px; margin-top: 8px; }
+    #status { margin-top: 15px; color: #475569; }
+    #results { display: none; }
+    .group { background: #f8faff; padding: 15px; border-radius: 9px; margin: 12px 0; }
+    footer { text-align: center; color: #94a3b8; padding: 25px; font-size: 13px; }
+    @media(max-width:600px) {
+      .stats { grid-template-columns: 1fr; }
+      .intro h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>ContentGuard</h2>
+    <span>AI Document Intelligence</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>Document Duplication Detector</h1>
+      <p class="muted">
+        Upload your documents, detect exact duplicate content,
+        and generate an intelligent analysis report.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Upload Documents</h2>
+      <p class="muted">Supported formats: PDF and TXT</p>
+
+      <div class="upload">
+        <div class="upload-icon">☁️</div>
+        <h3>Select documents to scan</h3>
+        <p class="muted">Choose multiple PDF or TXT files</p>
+        <input id="documents" type="file" multiple accept=".pdf,.txt">
+        <div>
+          <button id="scanButton" disabled>Scan Documents</button>
+        </div>
+        <div id="fileList" class="file-list"></div>
+        <p id="status">No documents selected.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="results">
+      <h2>Scan Results</h2>
+      <div class="stats">
+        <div class="stat">Total Documents<strong id="total">0</strong></div>
+        <div class="stat">Unique Documents<strong id="unique">0</strong></div>
+        <div class="stat">Duplicate Documents<strong id="duplicates">0</strong></div>
+      </div>
+      <h3>Duplicate Groups</h3>
+      <div id="duplicateGroups"></div>
+      <h3>AI Analysis Report</h3>
+      <p id="aiReport" class="muted">
+        Your AI-generated report will appear here after scanning is connected.
+      </p>
+    </section>
+  </main>
+
+  <footer>ContentGuard | AI-Powered Document Duplication Detection</footer>
+
+  <script>
+    const fileInput = document.getElementById("documents");
+    const scanButton = document.getElementById("scanButton");
+    const fileList = document.getElementById("fileList");
+    const status = document.getElementById("status");
+
+    fileInput.addEventListener("change", () => {
+      const files = Array.from(fileInput.files);
+      fileList.innerHTML = "";
+
+      files.forEach(file => {
+        const item = document.createElement("div");
+        item.className = "file-item";
+        item.textContent = file.name;
+        fileList.appendChild(item);
+      });
+
+      const valid = files.length > 0 &&
+        files.every(file => /\.(pdf|txt)$/i.test(file.name));
+
+      scanButton.disabled = !valid;
+      status.textContent = valid
+        ? files.length + " document(s) selected."
+        : "Select one or more PDF or TXT files.";
+    });
+
+    scanButton.addEventListener("click", () => {
+      status.textContent =
+        "Upload interface ready. Backend scanning will be connected next.";
+    });
+  </script>
+</body>
+</html>
