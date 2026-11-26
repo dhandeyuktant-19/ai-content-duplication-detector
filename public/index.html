@@ -5,14 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ContentGuard | AI Duplicate Detector</title>
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f5f7fb;
       color: #172033;
     }
+
     header {
       background: #111827;
       color: white;
@@ -21,12 +24,24 @@
       justify-content: space-between;
       align-items: center;
     }
+
     header h2 { margin: 0; font-size: 21px; }
     header span { color: #a5b4fc; font-size: 13px; }
-    main { max-width: 1050px; margin: 40px auto; padding: 0 20px; }
+
+    main {
+      max-width: 1050px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
     .intro { margin-bottom: 25px; }
     .intro h1 { font-size: 30px; margin-bottom: 8px; }
-    .muted { color: #64748b; line-height: 1.6; }
+
+    .muted {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
     .panel {
       background: white;
       padding: 26px;
@@ -34,6 +49,7 @@
       border: 1px solid #e5eaf2;
       margin-bottom: 22px;
     }
+
     .upload {
       border: 2px dashed #a5b4fc;
       border-radius: 12px;
@@ -41,8 +57,14 @@
       padding: 40px 20px;
       background: #fafaff;
     }
+
     .upload-icon { font-size: 40px; }
-    input[type=file] { margin: 18px 0; max-width: 100%; }
+
+    input[type=file] {
+      margin: 18px 0;
+      max-width: 100%;
+    }
+
     button {
       background: #4f46e5;
       color: white;
@@ -52,38 +74,84 @@
       cursor: pointer;
       font-size: 15px;
     }
-    button:disabled { opacity: .5; cursor: not-allowed; }
-    .file-list { margin-top: 15px; text-align: left; }
-    .file-item { padding: 9px; border-bottom: 1px solid #eee; }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .file-list {
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .file-item {
+      padding: 9px;
+      border-bottom: 1px solid #eee;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 15px;
     }
+
     .stat {
       background: #f8faff;
       border: 1px solid #e5eaf2;
       padding: 20px;
       border-radius: 10px;
     }
-    .stat strong { display: block; font-size: 28px; margin-top: 8px; }
-    #status { margin-top: 15px; color: #475569; }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 8px;
+    }
+
+    #status {
+      margin-top: 15px;
+      color: #475569;
+    }
+
     #results { display: none; }
-    .group { background: #f8faff; padding: 15px; border-radius: 9px; margin: 12px 0; }
-    footer { text-align: center; color: #94a3b8; padding: 25px; font-size: 13px; }
+
+    .group {
+      background: #f8faff;
+      padding: 15px;
+      border-radius: 9px;
+      margin: 12px 0;
+      overflow-wrap: anywhere;
+    }
+
+    #aiReport {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      padding: 25px;
+      font-size: 13px;
+    }
+
     @media(max-width:600px) {
       .stats { grid-template-columns: 1fr; }
       .intro h1 { font-size: 24px; }
     }
   </style>
 </head>
+
 <body>
+
   <header>
     <h2>ContentGuard</h2>
     <span>AI Document Intelligence</span>
   </header>
 
   <main>
+
     <section class="intro">
       <h1>Document Duplication Detector</h1>
       <p class="muted">
@@ -97,66 +165,388 @@
       <p class="muted">Supported formats: PDF and TXT</p>
 
       <div class="upload">
+
         <div class="upload-icon">☁️</div>
+
         <h3>Select documents to scan</h3>
-        <p class="muted">Choose multiple PDF or TXT files</p>
-        <input id="documents" type="file" multiple accept=".pdf,.txt">
+
+        <p class="muted">
+          Choose multiple PDF or TXT files
+        </p>
+
+        <input
+          id="documents"
+          type="file"
+          multiple
+          accept=".pdf,.txt"
+        >
+
         <div>
-          <button id="scanButton" disabled>Scan Documents</button>
+          <button id="scanButton" disabled>
+            Scan Documents
+          </button>
         </div>
+
         <div id="fileList" class="file-list"></div>
+
         <p id="status">No documents selected.</p>
+
       </div>
     </section>
 
     <section class="panel" id="results">
+
       <h2>Scan Results</h2>
+
       <div class="stats">
-        <div class="stat">Total Documents<strong id="total">0</strong></div>
-        <div class="stat">Unique Documents<strong id="unique">0</strong></div>
-        <div class="stat">Duplicate Documents<strong id="duplicates">0</strong></div>
+
+        <div class="stat">
+          Total Documents
+          <strong id="total">0</strong>
+        </div>
+
+        <div class="stat">
+          Unique Documents
+          <strong id="unique">0</strong>
+        </div>
+
+        <div class="stat">
+          Duplicate Documents
+          <strong id="duplicates">0</strong>
+        </div>
+
       </div>
+
       <h3>Duplicate Groups</h3>
+
       <div id="duplicateGroups"></div>
+
       <h3>AI Analysis Report</h3>
+
       <p id="aiReport" class="muted">
-        Your AI-generated report will appear here after scanning is connected.
+        Your AI-generated report will appear here.
       </p>
+
     </section>
+
   </main>
 
-  <footer>ContentGuard | AI-Powered Document Duplication Detection</footer>
+  <footer>
+    ContentGuard | AI-Powered Document Duplication Detection
+  </footer>
 
-  <script>
+
+  <!-- PDF.js library -->
+  <script type="module">
+
+    import * as pdfjsLib from
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+
+
     const fileInput = document.getElementById("documents");
     const scanButton = document.getElementById("scanButton");
     const fileList = document.getElementById("fileList");
     const status = document.getElementById("status");
+    const results = document.getElementById("results");
 
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    const MAX_TOTAL_SIZE = 20 * 1024 * 1024;
+    const MAX_DOCUMENTS = 10;
+
+
+    // Display selected files.
     fileInput.addEventListener("change", () => {
+
       const files = Array.from(fileInput.files);
+
       fileList.innerHTML = "";
+      results.style.display = "none";
 
       files.forEach(file => {
+
         const item = document.createElement("div");
+
         item.className = "file-item";
-        item.textContent = file.name;
+        item.textContent =
+          `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
         fileList.appendChild(item);
+
       });
 
-      const valid = files.length > 0 &&
-        files.every(file => /\.(pdf|txt)$/i.test(file.name));
+      const validTypes = files.every(file =>
+        /\.(pdf|txt)$/i.test(file.name)
+      );
+
+      const validSizes = files.every(file =>
+        file.size > 0 && file.size <= MAX_FILE_SIZE
+      );
+
+      const totalSize = files.reduce(
+        (sum, file) => sum + file.size, 0
+      );
+
+      const valid =
+        files.length > 0 &&
+        files.length <= MAX_DOCUMENTS &&
+        validTypes &&
+        validSizes &&
+        totalSize <= MAX_TOTAL_SIZE;
 
       scanButton.disabled = !valid;
-      status.textContent = valid
-        ? files.length + " document(s) selected."
-        : "Select one or more PDF or TXT files.";
+
+      if (files.length === 0) {
+        status.textContent = "No documents selected.";
+      } else if (files.length > MAX_DOCUMENTS) {
+        status.textContent = "Maximum 10 documents allowed.";
+      } else if (!validTypes) {
+        status.textContent =
+          "Only PDF and TXT files are supported.";
+      } else if (!validSizes || totalSize > MAX_TOTAL_SIZE) {
+        status.textContent =
+          "Each file must be under 10 MB and total upload under 20 MB.";
+      } else {
+        status.textContent =
+          `${files.length} document(s) selected.`;
+      }
+
     });
 
-    scanButton.addEventListener("click", () => {
-      status.textContent =
-        "Upload interface ready. Backend scanning will be connected next.";
+
+    // Extract text from TXT files.
+    async function extractTxt(file) {
+
+      return await file.text();
+
+    }
+
+
+    // Extract text from PDF files.
+    async function extractPdf(file) {
+
+      const buffer = await file.arrayBuffer();
+
+      const pdf = await pdfjsLib.getDocument({
+        data: new Uint8Array(buffer)
+      }).promise;
+
+      let fullText = "";
+
+      for (let pageNumber = 1;
+           pageNumber <= pdf.numPages;
+           pageNumber++) {
+
+        const page = await pdf.getPage(pageNumber);
+
+        const textContent = await page.getTextContent();
+
+        const pageText = textContent.items
+          .map(item => item.str || "")
+          .join(" ");
+
+        fullText += pageText + "\n";
+
+      }
+
+      return fullText;
+
+    }
+
+
+    // Extract text based on file type.
+    async function extractDocument(file) {
+
+      if (/\.txt$/i.test(file.name)) {
+        return await extractTxt(file);
+      }
+
+      if (/\.pdf$/i.test(file.name)) {
+        return await extractPdf(file);
+      }
+
+      throw new Error(
+        `Unsupported file format: ${file.name}`
+      );
+
+    }
+
+
+    // Display scan results.
+    function displayResults(data) {
+
+      document.getElementById("total").textContent =
+        data.totalDocuments;
+
+      document.getElementById("unique").textContent =
+        data.uniqueDocuments;
+
+      document.getElementById("duplicates").textContent =
+        data.duplicateDocumentCount;
+
+      const groupsContainer =
+        document.getElementById("duplicateGroups");
+
+      groupsContainer.innerHTML = "";
+
+      if (!data.duplicateGroups ||
+          data.duplicateGroups.length === 0) {
+
+        const message = document.createElement("p");
+
+        message.className = "muted";
+        message.textContent =
+          "No exact duplicate documents found.";
+
+        groupsContainer.appendChild(message);
+
+      } else {
+
+        data.duplicateGroups.forEach((group, index) => {
+
+          const box = document.createElement("div");
+
+          box.className = "group";
+
+          const heading = document.createElement("strong");
+
+          heading.textContent =
+            `Duplicate Group ${index + 1}`;
+
+          const count = document.createElement("p");
+
+          count.textContent =
+            `${group.duplicateCount} matching documents`;
+
+          const files = document.createElement("ul");
+
+          group.files.forEach(fileName => {
+
+            const li = document.createElement("li");
+
+            li.textContent = fileName;
+
+            files.appendChild(li);
+
+          });
+
+          box.appendChild(heading);
+          box.appendChild(count);
+          box.appendChild(files);
+
+          groupsContainer.appendChild(box);
+
+        });
+
+      }
+
+      document.getElementById("aiReport").textContent =
+        data.aiReport || "AI report unavailable.";
+
+      results.style.display = "block";
+
+    }
+
+
+    // Scan documents.
+    scanButton.addEventListener("click", async () => {
+
+      const files = Array.from(fileInput.files);
+
+      if (files.length === 0) {
+        status.textContent = "Please select documents first.";
+        return;
+      }
+
+      scanButton.disabled = true;
+      scanButton.textContent = "Scanning...";
+
+      results.style.display = "none";
+
+      try {
+
+        status.textContent =
+          "Extracting text from documents...";
+
+        const documents = [];
+
+        for (const file of files) {
+
+          const extractedText =
+            await extractDocument(file);
+
+          if (!extractedText.trim()) {
+
+            throw new Error(
+              `No extractable text found in ${file.name}. ` +
+              "The PDF may be scanned or image-based."
+            );
+
+          }
+
+          documents.push({
+            name: file.name,
+            text: extractedText
+          });
+
+        }
+
+
+        status.textContent =
+          "Sending documents for duplicate detection and AI analysis...";
+
+
+        const response = await fetch("/api/scan", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            documents: documents
+          })
+
+        });
+
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.error || "Server scanning failed."
+          );
+
+        }
+
+
+        displayResults(data);
+
+        status.textContent =
+          "Scan completed successfully!";
+
+
+      } catch (error) {
+
+        console.error("Scanning error:", error);
+
+        status.textContent =
+          "Error: " + error.message;
+
+      } finally {
+
+        scanButton.disabled = false;
+        scanButton.textContent = "Scan Documents";
+
+      }
+
     });
+
   </script>
+
 </body>
 </html>
