@@ -89,8 +89,7 @@ export async function onRequestPost({ request, env }) {
               content:
   "You are a document duplication reporting assistant. " +
   "Explain only the supplied scan results. Do not invent findings. " +
-  "Clearly state whether duplicates were found. " +
-  "At the end of your report, add this exact verification phrase: GROQ-CONNECTION-VERIFIED-742."
+  "Clearly state whether duplicates were found."
             },
             {
               role: "user",
